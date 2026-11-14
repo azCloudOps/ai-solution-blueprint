@@ -1,0 +1,29 @@
+name: Knowledge base update
+description: A service was renamed or retired, a control is missing, or guidance is out of date
+labels: [kb-update]
+body:
+  - type: input
+    id: item
+    attributes:
+      label: What needs to change?
+      placeholder: "aws.retrieval service name, or a new control for agent memory"
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed text
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source (vendor documentation, release notes or specification)
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Product status
+      options: [Generally available, Preview, Announced, Retiring or deprecated, Not applicable]

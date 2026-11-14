@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest a feature for a future monthly release
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+  - type: dropdown
+    id: role
+    attributes:
+      label: Your role
+      options: [Architect, Platform or cloud engineer, Developer, Security or governance, FinOps, IT leader, Maker or low-code builder, Other]

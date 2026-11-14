@@ -1,0 +1,22 @@
+{
+  "name": "@azcloudops/ai-solution-blueprint",
+  "version": "1.0.0",
+  "description": "Design an enterprise AI solution from idea to production: pattern, cloud architecture, governance, evaluation, cost and readiness. By azCloudOps.",
+  "type": "module",
+  "bin": { "aiblueprint": "bin/aiblueprint.js" },
+  "main": "src/engine.js",
+  "exports": { ".": "./src/engine.js", "./kb": "./kb/knowledge-base.json" },
+  "files": ["bin", "src", "kb", "web", "scripts", "examples", "README.md", "LICENSE", "CHANGELOG.md"],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check-kb.mjs && node --test test/*.test.js && node scripts/build.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "keywords": ["ai", "architecture", "rag", "agents", "governance", "azure", "aws", "google-cloud", "finops", "llmops", "azcloudops"],
+  "author": "Manoj Annavajjala (azCloudOps)",
+  "license": "MIT",
+  "homepage": "https://azcloudops.org/products/ai-solution-blueprint/",
+  "repository": { "type": "git", "url": "git+https://github.com/azcloudops/ai-solution-blueprint.git" },
+  "bugs": { "url": "https://github.com/azcloudops/ai-solution-blueprint/issues" }
+}

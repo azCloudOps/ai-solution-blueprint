@@ -1,0 +1,21 @@
+{
+  "schema": "aiblueprint/v1",
+  "meta": { "name": "Insurance Claims Triage", "owner": "VP Claims Operations", "team": "Claims Platform" },
+  "idea": {
+    "problem": "Claims are routed manually and complex claims wait in the same queue as simple ones.",
+    "users": "both", "userCount": 250000,
+    "successMetric": "Simple claims routed to fast track within five minutes, with appeal rate unchanged",
+    "value": "Lower handling cost and faster payouts"
+  },
+  "useCase": "extract",
+  "domain": "finance",
+  "data": { "sources": "Claim forms, adjuster notes, policy documents", "sensitivity": "regulated", "freshness": "daily", "docCount": 40000, "residency": "eu" },
+  "actions": "write",
+  "autonomy": "approve",
+  "decisionImpact": "high",
+  "needs": { "style": true, "highVolume": true, "multiTeam": false, "lowLatency": false },
+  "platform": "gcp",
+  "build": "pro-code",
+  "scale": { "requestsPerDay": 12000, "inputTokens": 5000, "outputTokens": 300, "stepsPerTask": 2 },
+  "readiness": { "done": [] }
+}

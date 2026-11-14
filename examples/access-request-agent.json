@@ -1,0 +1,21 @@
+{
+  "schema": "aiblueprint/v1",
+  "meta": { "name": "Access Request Agent", "owner": "Head of Identity and Access Management", "team": "Security Engineering" },
+  "idea": {
+    "problem": "Access requests wait days for manual review and provisioning across three clouds.",
+    "users": "internal", "userCount": 8000,
+    "successMetric": "Standard access requests fulfilled in under one hour with zero policy violations",
+    "value": "Faster onboarding and fewer standing privileges"
+  },
+  "useCase": "agent-automation",
+  "domain": "it-ops",
+  "data": { "sources": "Entitlement catalog, HR system, access policies, ticketing system", "sensitivity": "confidential", "freshness": "realtime", "docCount": 600, "residency": "us" },
+  "actions": "write",
+  "autonomy": "approve",
+  "decisionImpact": "medium",
+  "needs": { "style": false, "highVolume": false, "multiTeam": true, "lowLatency": false },
+  "platform": "aws",
+  "build": "pro-code",
+  "scale": { "requestsPerDay": 400, "inputTokens": 6000, "outputTokens": 800, "stepsPerTask": 6 },
+  "readiness": { "done": ["rd-owner"] }
+}

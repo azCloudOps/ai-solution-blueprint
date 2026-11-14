@@ -1,0 +1,338 @@
+{
+  "kbVersion": "2026.11.0",
+  "lastReviewed": "2026-11-14",
+  "reviewNote": "Cloud AI product names change often. Every service entry carries verify: true until a maintainer has opened the primary source for this release. Ignite 2026 and re:Invent 2026 updates are scheduled for the December release.",
+
+  "useCases": [
+    { "id": "knowledge-qa", "label": "Answer questions from our documents and knowledge", "example": "Policy assistant, IT help desk answers, product documentation Q&A" },
+    { "id": "summarize", "label": "Summarize or compare content", "example": "Call summaries, contract comparison, incident post-mortem drafts" },
+    { "id": "generate", "label": "Draft or generate content", "example": "Marketing drafts, RFP responses, release notes" },
+    { "id": "extract", "label": "Extract, classify or route information", "example": "Invoice field extraction, ticket triage, email routing" },
+    { "id": "assistant", "label": "Conversational assistant for employees or customers", "example": "Employee self-service, customer support chat" },
+    { "id": "agent-automation", "label": "Take actions and automate multi-step work", "example": "Provision access, update records, run runbooks, file tickets" },
+    { "id": "code", "label": "Assist developers or operators with code and config", "example": "IaC review, query generation, runbook authoring" },
+    { "id": "predict", "label": "Predict, forecast or detect anomalies from structured data", "example": "Demand forecast, churn risk, cost anomaly detection" }
+  ],
+
+  "domains": [
+    { "id": "general", "label": "General business", "highRisk": false },
+    { "id": "it-ops", "label": "IT and cloud operations", "highRisk": false },
+    { "id": "customer", "label": "Customer service and sales", "highRisk": false },
+    { "id": "hr", "label": "Employment, HR and workforce decisions", "highRisk": true },
+    { "id": "finance", "label": "Credit, insurance or essential financial services", "highRisk": true },
+    { "id": "health", "label": "Health and medical", "highRisk": true },
+    { "id": "education", "label": "Education and assessment", "highRisk": true },
+    { "id": "public", "label": "Public sector, justice or law enforcement", "highRisk": true },
+    { "id": "critical-infra", "label": "Critical infrastructure safety", "highRisk": true }
+  ],
+
+  "patterns": [
+    {
+      "id": "prompt",
+      "name": "Prompted foundation model",
+      "summary": "A hosted foundation model with engineered system prompts, structured output and guardrails. No custom retrieval or training.",
+      "whenToUse": "General drafting, summarizing content the user supplies, or extraction where the input contains everything the model needs.",
+      "watchOut": "Answers about your organization will be invented if the model is not given your data. Treat it as a starting pattern, not a knowledge system.",
+      "complexity": 1
+    },
+    {
+      "id": "rag",
+      "name": "Retrieval augmented generation (RAG)",
+      "summary": "Index your content, retrieve the most relevant passages for each request, and have the model answer only from those passages with citations.",
+      "whenToUse": "Questions over policies, documentation, tickets or any content that changes and must be cited.",
+      "watchOut": "Most RAG failures are retrieval failures. Budget time for chunking, metadata, hybrid search and permission trimming before tuning prompts.",
+      "complexity": 2
+    },
+    {
+      "id": "agent",
+      "name": "Tool-using agent",
+      "summary": "A model that plans and calls tools (APIs, MCP servers, functions) to complete tasks, usually with retrieval for grounding.",
+      "whenToUse": "The solution must read from or write to business systems, or complete multi-step work rather than only answer.",
+      "watchOut": "Excessive agency is the top production risk. Scope every tool, give the agent its own identity, and require approval for writes until evaluation proves otherwise.",
+      "complexity": 3
+    },
+    {
+      "id": "multi-agent",
+      "name": "Orchestrated multi-agent system",
+      "summary": "Several specialised agents coordinated by an orchestrator or workflow, often across teams or platforms using protocols such as MCP and A2A.",
+      "whenToUse": "Distinct sub-tasks need different tools, permissions or owners, and a single agent's prompt and toolset has become unmanageable.",
+      "watchOut": "Cost, latency and failure modes multiply with every hop. Start with one agent and split only when evaluation shows a clear gain.",
+      "complexity": 4
+    },
+    {
+      "id": "fine-tune",
+      "name": "Fine-tuned or distilled model",
+      "summary": "Adapt a base model on curated examples to lock in format, tone, domain vocabulary or to run a smaller, cheaper model at scale.",
+      "whenToUse": "Prompting and retrieval are proven but you need consistent style, lower latency or lower unit cost at high volume.",
+      "watchOut": "Fine-tuning does not teach reliable facts. Keep retrieval for knowledge, and plan to retrain whenever the base model is retired.",
+      "complexity": 3
+    },
+    {
+      "id": "classic-ml",
+      "name": "Predictive machine learning",
+      "summary": "Supervised or unsupervised models trained on structured historical data, served behind an API with drift monitoring.",
+      "whenToUse": "Forecasting, scoring, anomaly detection and classification on tabular or time series data.",
+      "watchOut": "Generative AI is rarely the right tool for numeric prediction. Use it for explanation on top of a predictive model, not instead of one.",
+      "complexity": 2
+    }
+  ],
+
+  "components": [
+    { "id": "channel", "label": "Experience and channel", "layer": "experience" },
+    { "id": "lowcode", "label": "Low-code builder", "layer": "experience" },
+    { "id": "gateway", "label": "AI gateway and API management", "layer": "edge" },
+    { "id": "identity", "label": "Identity (users and agents)", "layer": "edge" },
+    { "id": "orchestration", "label": "Orchestration and agent runtime", "layer": "orchestration" },
+    { "id": "framework", "label": "Agent framework / SDK", "layer": "orchestration" },
+    { "id": "models", "label": "Model hosting and catalog", "layer": "intelligence" },
+    { "id": "retrieval", "label": "Retrieval and vector index", "layer": "intelligence" },
+    { "id": "tools", "label": "Tool connectivity (MCP / APIs)", "layer": "intelligence" },
+    { "id": "ingestion", "label": "Document ingestion and parsing", "layer": "data" },
+    { "id": "data", "label": "Data platform and storage", "layer": "data" },
+    { "id": "training", "label": "Training, tuning and ML lifecycle", "layer": "intelligence" },
+    { "id": "safety", "label": "Content safety and guardrails", "layer": "cross" },
+    { "id": "secrets", "label": "Secrets and keys", "layer": "cross" },
+    { "id": "observability", "label": "Tracing and monitoring", "layer": "cross" },
+    { "id": "evaluation", "label": "Evaluation", "layer": "cross" },
+    { "id": "governance", "label": "Governance and data protection", "layer": "cross" },
+    { "id": "compute", "label": "Application compute", "layer": "orchestration" }
+  ],
+
+  "patternComponents": {
+    "prompt": ["channel", "gateway", "identity", "compute", "models", "safety", "secrets", "observability", "evaluation", "governance"],
+    "rag": ["channel", "gateway", "identity", "compute", "models", "retrieval", "ingestion", "data", "safety", "secrets", "observability", "evaluation", "governance"],
+    "agent": ["channel", "gateway", "identity", "orchestration", "framework", "models", "retrieval", "tools", "data", "safety", "secrets", "observability", "evaluation", "governance"],
+    "multi-agent": ["channel", "gateway", "identity", "orchestration", "framework", "models", "retrieval", "tools", "data", "safety", "secrets", "observability", "evaluation", "governance"],
+    "fine-tune": ["channel", "gateway", "identity", "compute", "models", "training", "data", "safety", "secrets", "observability", "evaluation", "governance"],
+    "classic-ml": ["channel", "gateway", "identity", "compute", "training", "data", "secrets", "observability", "evaluation", "governance"]
+  },
+
+  "providers": {
+    "azure": {
+      "name": "Microsoft Azure",
+      "docs": "https://learn.microsoft.com/azure/ai-foundry/",
+      "services": {
+        "channel": { "name": "Microsoft Teams, Microsoft 365 Copilot or a web app", "verify": true },
+        "lowcode": { "name": "Microsoft Copilot Studio", "verify": true },
+        "gateway": { "name": "Azure API Management (AI gateway policies)", "verify": true },
+        "identity": { "name": "Microsoft Entra ID with Entra Agent ID for agent identities", "verify": true },
+        "orchestration": { "name": "Foundry Agent Service (hosted agents)", "verify": true },
+        "framework": { "name": "Microsoft Agent Framework", "verify": true },
+        "models": { "name": "Microsoft Foundry Models (Azure OpenAI and partner models)", "verify": true },
+        "retrieval": { "name": "Azure AI Search (Foundry IQ knowledge bases)", "verify": true },
+        "tools": { "name": "Foundry Agent Service tools and MCP connections", "verify": true },
+        "ingestion": { "name": "Azure Content Understanding or Document Intelligence", "verify": true },
+        "data": { "name": "Azure Blob Storage, Microsoft Fabric OneLake", "verify": true },
+        "training": { "name": "Foundry fine-tuning or Azure Machine Learning", "verify": true },
+        "safety": { "name": "Azure AI Content Safety (Prompt Shields, groundedness detection)", "verify": true },
+        "secrets": { "name": "Azure Key Vault and managed identities", "verify": true },
+        "observability": { "name": "Azure Monitor Application Insights with OpenTelemetry, Foundry tracing", "verify": true },
+        "evaluation": { "name": "Foundry evaluations", "verify": true },
+        "governance": { "name": "Microsoft Purview, Defender for Cloud AI threat protection, Azure Policy", "verify": true },
+        "compute": { "name": "Azure Container Apps or AKS", "verify": true }
+      }
+    },
+    "aws": {
+      "name": "Amazon Web Services",
+      "docs": "https://docs.aws.amazon.com/bedrock-agentcore/",
+      "services": {
+        "channel": { "name": "Web or mobile app, Amazon Connect, Slack or Teams integration", "verify": true },
+        "lowcode": { "name": "Amazon Quick Suite", "verify": true },
+        "gateway": { "name": "Amazon API Gateway", "verify": true },
+        "identity": { "name": "AWS IAM Identity Center with AgentCore Identity", "verify": true },
+        "orchestration": { "name": "Amazon Bedrock AgentCore Runtime", "verify": true },
+        "framework": { "name": "Strands Agents SDK or any framework on AgentCore", "verify": true },
+        "models": { "name": "Amazon Bedrock", "verify": true },
+        "retrieval": { "name": "Amazon Bedrock Knowledge Bases (OpenSearch Serverless or S3 Vectors)", "verify": true },
+        "tools": { "name": "Amazon Bedrock AgentCore Gateway (MCP)", "verify": true },
+        "ingestion": { "name": "Amazon Bedrock Data Automation or Amazon Textract", "verify": true },
+        "data": { "name": "Amazon S3, AWS Glue", "verify": true },
+        "training": { "name": "Amazon SageMaker AI or Bedrock model customization", "verify": true },
+        "safety": { "name": "Amazon Bedrock Guardrails", "verify": true },
+        "secrets": { "name": "AWS Secrets Manager and AWS KMS", "verify": true },
+        "observability": { "name": "Amazon CloudWatch with AgentCore Observability (OpenTelemetry)", "verify": true },
+        "evaluation": { "name": "AgentCore Evaluations and Bedrock model evaluation", "verify": true },
+        "governance": { "name": "AWS Organizations SCPs, AWS CloudTrail, AgentCore Policy", "verify": true },
+        "compute": { "name": "AWS Lambda, Amazon ECS or Amazon EKS", "verify": true }
+      }
+    },
+    "gcp": {
+      "name": "Google Cloud",
+      "docs": "https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-agent-platform",
+      "services": {
+        "channel": { "name": "Gemini Enterprise app, Google Workspace or a web app", "verify": true },
+        "lowcode": { "name": "Agent Studio and Agent Designer (Gemini Enterprise)", "verify": true },
+        "gateway": { "name": "Apigee", "verify": true },
+        "identity": { "name": "Cloud IAM, Workforce and Workload Identity Federation", "verify": true },
+        "orchestration": { "name": "Agent Engine (Gemini Enterprise Agent Platform)", "verify": true },
+        "framework": { "name": "Agent Development Kit (ADK)", "verify": true },
+        "models": { "name": "Gemini Enterprise Agent Platform Model Garden (formerly Vertex AI)", "verify": true },
+        "retrieval": { "name": "Vertex AI Search or RAG Engine (now within Agent Platform)", "verify": true },
+        "tools": { "name": "ADK tools, MCP servers and Apigee API hub", "verify": true },
+        "ingestion": { "name": "Document AI", "verify": true },
+        "data": { "name": "Cloud Storage, BigQuery", "verify": true },
+        "training": { "name": "Agent Platform tuning and training (formerly Vertex AI)", "verify": true },
+        "safety": { "name": "Model Armor", "verify": true },
+        "secrets": { "name": "Secret Manager and Cloud KMS", "verify": true },
+        "observability": { "name": "Cloud Trace, Cloud Logging and Cloud Monitoring (OpenTelemetry)", "verify": true },
+        "evaluation": { "name": "Gen AI evaluation service", "verify": true },
+        "governance": { "name": "Security Command Center AI Protection, VPC Service Controls", "verify": true },
+        "compute": { "name": "Cloud Run or GKE", "verify": true }
+      }
+    },
+    "portable": {
+      "name": "Portable / multi-cloud",
+      "docs": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "services": {
+        "channel": { "name": "Web app or chat platform integration", "verify": false },
+        "lowcode": { "name": "Platform-specific; keep low-code at the edge only", "verify": false },
+        "gateway": { "name": "Self-hosted LLM gateway (for example LiteLLM or Envoy AI Gateway)", "verify": true },
+        "identity": { "name": "OIDC provider with workload identity federation per cloud", "verify": false },
+        "orchestration": { "name": "Containerised agent service on Kubernetes", "verify": false },
+        "framework": { "name": "LangGraph, Microsoft Agent Framework, ADK or Strands (choose one)", "verify": true },
+        "models": { "name": "Models from two or more providers behind the gateway; vLLM or KServe for open weights", "verify": true },
+        "retrieval": { "name": "PostgreSQL with pgvector, OpenSearch or a managed vector database", "verify": false },
+        "tools": { "name": "Model Context Protocol (MCP) servers; Agent2Agent (A2A) for agent-to-agent calls", "verify": true },
+        "ingestion": { "name": "Open source parsers (for example Apache Tika or Docling)", "verify": true },
+        "data": { "name": "Object storage plus your existing warehouse", "verify": false },
+        "training": { "name": "Kubeflow or MLflow on Kubernetes", "verify": true },
+        "safety": { "name": "Open guardrail models and policy checks at the gateway", "verify": true },
+        "secrets": { "name": "HashiCorp Vault or External Secrets Operator", "verify": false },
+        "observability": { "name": "OpenTelemetry GenAI semantic conventions to any backend", "verify": true },
+        "evaluation": { "name": "Open evaluation harness run in CI (golden datasets, LLM-as-judge with human calibration)", "verify": false },
+        "governance": { "name": "Policy as code (OPA), central AI inventory, FinOps FOCUS cost exports", "verify": true },
+        "compute": { "name": "Kubernetes (any conformant distribution)", "verify": false }
+      }
+    }
+  },
+
+  "riskTiers": [
+    { "tier": 1, "name": "Minimal", "description": "Internal, low-impact assistance on non-sensitive data. Standard engineering controls apply." },
+    { "tier": 2, "name": "Limited", "description": "Users interact with AI directly or sensitive data is involved. Transparency, privacy and safety controls are required." },
+    { "tier": 3, "name": "High", "description": "The system acts in business systems, handles regulated data, or influences decisions about people. Human oversight, formal evaluation and risk sign-off are required." },
+    { "tier": 4, "name": "Restricted review", "description": "Likely in a regulated high-risk category. Legal, privacy and risk teams must review before any pilot with real users." }
+  ],
+
+  "controls": [
+    { "id": "ctl-inventory", "title": "Register the solution in the AI inventory with an accountable owner", "category": "Governance", "minTier": 1, "refs": ["NIST AI RMF: Govern", "ISO/IEC 42001"] },
+    { "id": "ctl-identity", "title": "Use managed or federated identities; no API keys in code", "category": "Security", "minTier": 1, "refs": ["OWASP LLM03"] },
+    { "id": "ctl-gateway", "title": "Route all model calls through a gateway with quotas, rate limits and per-team cost attribution", "category": "FinOps", "minTier": 1, "refs": ["OWASP LLM10", "FinOps FOCUS"] },
+    { "id": "ctl-budget", "title": "Set hard spend caps and alerts per environment and per consumer", "category": "FinOps", "minTier": 1, "refs": ["OWASP LLM10"] },
+    { "id": "ctl-telemetry", "title": "Emit OpenTelemetry GenAI traces for prompts, tool calls, tokens and latency", "category": "Operations", "minTier": 1, "refs": ["NIST AI RMF: Measure"] },
+    { "id": "ctl-prompt-injection", "title": "Apply prompt injection detection on user input and retrieved content", "category": "Security", "minTier": 1, "refs": ["OWASP LLM01"] },
+    { "id": "ctl-output-handling", "title": "Validate and encode model output before it reaches other systems or browsers", "category": "Security", "minTier": 1, "refs": ["OWASP LLM05"] },
+    { "id": "ctl-system-prompt", "title": "Keep secrets and authorization logic out of system prompts", "category": "Security", "minTier": 1, "refs": ["OWASP LLM07"] },
+    { "id": "ctl-transparency", "title": "Tell users they are interacting with AI and label generated content", "category": "Responsible AI", "minTier": 2, "refs": ["EU AI Act Art. 50", "NIST AI RMF: Govern"] },
+    { "id": "ctl-content-safety", "title": "Enable content safety filters for harmful content in input and output", "category": "Responsible AI", "minTier": 2, "refs": ["NIST AI 600-1"] },
+    { "id": "ctl-pii", "title": "Detect and redact personal data in prompts, logs and training sets", "category": "Privacy", "minTier": 2, "when": { "sensitivity": ["confidential", "regulated"] }, "refs": ["OWASP LLM02", "GDPR Art. 25"] },
+    { "id": "ctl-dpia", "title": "Complete a privacy impact assessment (DPIA) before pilot", "category": "Privacy", "minTier": 2, "when": { "sensitivity": ["regulated"] }, "refs": ["GDPR Art. 35"] },
+    { "id": "ctl-residency", "title": "Pin model and data processing to approved regions; confirm no cross-region inference", "category": "Compliance", "minTier": 1, "when": { "residency": ["eu", "us", "other"] }, "refs": ["Data residency policy"] },
+    { "id": "ctl-permission-trim", "title": "Enforce source permissions at retrieval time (security trimming)", "category": "Security", "minTier": 1, "when": { "patterns": ["rag", "agent", "multi-agent"] }, "refs": ["OWASP LLM08", "OWASP LLM02"] },
+    { "id": "ctl-grounding", "title": "Require citations and run groundedness checks on answers", "category": "Responsible AI", "minTier": 1, "when": { "patterns": ["rag", "agent", "multi-agent"] }, "refs": ["OWASP LLM09"] },
+    { "id": "ctl-index-integrity", "title": "Control who can add content to the index; scan sources for poisoning", "category": "Security", "minTier": 2, "when": { "patterns": ["rag", "agent", "multi-agent", "fine-tune"] }, "refs": ["OWASP LLM04", "OWASP LLM08"] },
+    { "id": "ctl-agent-identity", "title": "Give each agent its own identity with least-privilege, scoped tool permissions", "category": "Security", "minTier": 1, "when": { "actions": ["read", "write"] }, "refs": ["OWASP LLM06"] },
+    { "id": "ctl-approval", "title": "Require human approval for write or irreversible actions", "category": "Responsible AI", "minTier": 1, "when": { "actions": ["write"] }, "refs": ["OWASP LLM06", "EU AI Act Art. 14"] },
+    { "id": "ctl-kill-switch", "title": "Provide a kill switch and per-agent action rate limits", "category": "Operations", "minTier": 2, "when": { "actions": ["write"] }, "refs": ["OWASP LLM06", "OWASP LLM10"] },
+    { "id": "ctl-mcp-allowlist", "title": "Allow-list MCP servers and tools; review tool descriptions as untrusted input", "category": "Security", "minTier": 1, "when": { "patterns": ["agent", "multi-agent"] }, "refs": ["OWASP LLM01", "OWASP LLM03"] },
+    { "id": "ctl-supply-chain", "title": "Pin model versions and track model retirement dates", "category": "Operations", "minTier": 1, "refs": ["OWASP LLM03"] },
+    { "id": "ctl-training-data", "title": "Document training data lineage, consent and licensing", "category": "Compliance", "minTier": 1, "when": { "patterns": ["fine-tune", "classic-ml"] }, "refs": ["EU AI Act Art. 10", "OWASP LLM04"] },
+    { "id": "ctl-fairness", "title": "Test for bias across relevant groups and document results", "category": "Responsible AI", "minTier": 3, "refs": ["NIST AI RMF: Measure", "EU AI Act Art. 10"] },
+    { "id": "ctl-red-team", "title": "Run adversarial red teaming before production and after major changes", "category": "Security", "minTier": 2, "refs": ["NIST AI 600-1", "EU AI Act Art. 15"] },
+    { "id": "ctl-human-oversight", "title": "Define human oversight: who reviews, when they intervene, how users contest outcomes", "category": "Responsible AI", "minTier": 3, "refs": ["EU AI Act Art. 14", "NIST AI RMF: Manage"] },
+    { "id": "ctl-audit-log", "title": "Retain tamper-evident logs of inputs, outputs, tool calls and approvals", "category": "Compliance", "minTier": 3, "refs": ["EU AI Act Art. 12"] },
+    { "id": "ctl-risk-signoff", "title": "Obtain formal risk acceptance from risk, legal and the business owner", "category": "Governance", "minTier": 3, "refs": ["ISO/IEC 42001", "EU AI Act Art. 9"] },
+    { "id": "ctl-tech-docs", "title": "Maintain technical documentation and a model or system card", "category": "Compliance", "minTier": 3, "refs": ["EU AI Act Art. 11", "ISO/IEC 42001"] },
+    { "id": "ctl-legal-classification", "title": "Have legal confirm the regulatory classification (for example EU AI Act high-risk) before pilot", "category": "Compliance", "minTier": 4, "refs": ["EU AI Act Art. 6", "Annex III"] },
+    { "id": "ctl-incident", "title": "Add AI-specific incident runbooks (harmful output, data leak, runaway cost, rogue agent)", "category": "Operations", "minTier": 2, "refs": ["NIST AI RMF: Manage"] },
+    { "id": "ctl-drift", "title": "Monitor data and prediction drift with retraining triggers", "category": "Operations", "minTier": 1, "when": { "patterns": ["classic-ml", "fine-tune"] }, "refs": ["NIST AI RMF: Measure"] }
+  ],
+
+  "metrics": {
+    "common": [
+      { "name": "p95 end-to-end latency", "target": "Set per channel, for example under 4 seconds for chat" },
+      { "name": "Cost per successful task", "target": "Below the value of the task it replaces" },
+      { "name": "User satisfaction (thumbs up rate)", "target": "Baseline in pilot, then improve" },
+      { "name": "Jailbreak and prompt injection resistance", "target": "No successful attacks from the red team suite" }
+    ],
+    "prompt": [
+      { "name": "Rubric quality score", "target": "Human-calibrated judge score at or above pilot baseline" },
+      { "name": "Format and schema adherence", "target": "99 percent valid structured output" }
+    ],
+    "rag": [
+      { "name": "Retrieval recall at k", "target": "The right passage in the top results for 90 percent of golden questions" },
+      { "name": "Groundedness", "target": "Answers supported by retrieved sources" },
+      { "name": "Citation accuracy", "target": "Citations point to the passage that supports the claim" },
+      { "name": "Correct refusal rate", "target": "Says it does not know when sources are silent" }
+    ],
+    "agent": [
+      { "name": "Task success rate", "target": "Agreed threshold per task type before autonomy increases" },
+      { "name": "Tool call accuracy", "target": "Right tool with valid parameters" },
+      { "name": "Unsafe or unapproved action rate", "target": "Zero" },
+      { "name": "Steps per task and escalation rate", "target": "Stable or falling release over release" }
+    ],
+    "multi-agent": [
+      { "name": "End-to-end task success", "target": "Higher than the single-agent baseline, or do not split" },
+      { "name": "Hand-off failure rate", "target": "Tracked per agent boundary" }
+    ],
+    "fine-tune": [
+      { "name": "Held-out quality versus base model", "target": "Measurable gain on the target task" },
+      { "name": "Safety regression suite", "target": "No regression versus base model" }
+    ],
+    "classic-ml": [
+      { "name": "Precision, recall or MAPE", "target": "Agreed with the business owner against a baseline" },
+      { "name": "Drift and fairness metrics", "target": "Within thresholds, reviewed monthly" }
+    ]
+  },
+
+  "stages": [
+    { "id": "idea", "name": "Idea", "weeks": [1, 2] },
+    { "id": "poc", "name": "Proof of concept", "weeks": [2, 4] },
+    { "id": "pilot", "name": "Pilot", "weeks": [4, 8] },
+    { "id": "production", "name": "Production", "weeks": [4, 6] },
+    { "id": "scale", "name": "Scale and optimise", "weeks": [0, 0] }
+  ],
+
+  "readiness": [
+    { "id": "rd-owner", "stage": "idea", "text": "Business owner and success metric agreed" },
+    { "id": "rd-value", "stage": "idea", "text": "Value hypothesis and cost ceiling written down" },
+    { "id": "rd-data-access", "stage": "idea", "text": "Data owners have approved access for the proof of concept" },
+    { "id": "rd-golden", "stage": "poc", "text": "Golden evaluation set created (at least 50 real examples)" },
+    { "id": "rd-baseline", "stage": "poc", "text": "Baseline quality, latency and cost measured" },
+    { "id": "rd-pattern", "stage": "poc", "text": "Pattern choice validated against the evaluation set" },
+    { "id": "rd-inventory", "stage": "pilot", "text": "Registered in the AI inventory with risk tier" },
+    { "id": "rd-controls", "stage": "pilot", "text": "Required controls for the risk tier implemented" },
+    { "id": "rd-telemetry", "stage": "pilot", "text": "Tracing, cost attribution and dashboards live" },
+    { "id": "rd-feedback", "stage": "pilot", "text": "User feedback capture and review loop running" },
+    { "id": "rd-redteam", "stage": "pilot", "text": "Red team exercise completed and findings fixed" },
+    { "id": "rd-iac", "stage": "production", "text": "All infrastructure deployed by code with separate environments" },
+    { "id": "rd-ci-eval", "stage": "production", "text": "Evaluations run automatically on every prompt, model or index change" },
+    { "id": "rd-slo", "stage": "production", "text": "SLOs, alerts and on-call ownership defined" },
+    { "id": "rd-runbooks", "stage": "production", "text": "AI incident runbooks tested" },
+    { "id": "rd-signoff", "stage": "production", "text": "Risk, security and business sign-off recorded" },
+    { "id": "rd-model-lifecycle", "stage": "production", "text": "Model version pinning and retirement plan in place" },
+    { "id": "rd-finops", "stage": "scale", "text": "Unit economics reviewed monthly with FinOps" },
+    { "id": "rd-reuse", "stage": "scale", "text": "Reusable components published for other teams" }
+  ],
+
+  "references": [
+    { "title": "NIST AI Risk Management Framework", "url": "https://www.nist.gov/itl/ai-risk-management-framework" },
+    { "title": "NIST AI 600-1 Generative AI Profile", "url": "https://doi.org/10.6028/NIST.AI.600-1" },
+    { "title": "OWASP Top 10 for LLM Applications", "url": "https://genai.owasp.org/llm-top-10/" },
+    { "title": "EU AI Act, Regulation (EU) 2024/1689", "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj" },
+    { "title": "ISO/IEC 42001 AI management system", "url": "https://www.iso.org/standard/81230.html" },
+    { "title": "OpenTelemetry semantic conventions for generative AI", "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/" },
+    { "title": "FinOps Open Cost and Usage Specification (FOCUS)", "url": "https://focus.finops.org/" },
+    { "title": "Model Context Protocol", "url": "https://modelcontextprotocol.io/" }
+  ],
+
+  "costDefaults": {
+    "note": "Example placeholder rates only. Replace with your contracted prices for the model and region you will use.",
+    "inputPer1M": 2.5,
+    "outputPer1M": 10,
+    "embeddingPer1M": 0.1,
+    "tokensPerDoc": 2000,
+    "retrievalMonthly": 250,
+    "hostingMonthly": 150,
+    "observabilityMonthly": 100
+  }
+}

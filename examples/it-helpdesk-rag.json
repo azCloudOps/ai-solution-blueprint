@@ -1,0 +1,21 @@
+{
+  "schema": "aiblueprint/v1",
+  "meta": { "name": "IT Help Desk Answers", "owner": "Director, IT Service Desk", "team": "Enterprise IT" },
+  "idea": {
+    "problem": "Level 1 agents spend most of their time searching runbooks and knowledge articles for known fixes.",
+    "users": "internal", "userCount": 1200,
+    "successMetric": "Cut median time to resolution for known issues by 30 percent",
+    "value": "Agents resolve repeat tickets faster and escalations fall"
+  },
+  "useCase": "knowledge-qa",
+  "domain": "it-ops",
+  "data": { "sources": "ServiceNow knowledge base, Confluence runbooks, SharePoint IT policies", "sensitivity": "internal", "freshness": "daily", "docCount": 18000, "residency": "any" },
+  "actions": "read",
+  "autonomy": "assist",
+  "decisionImpact": "low",
+  "needs": { "style": false, "highVolume": false, "multiTeam": false, "lowLatency": false },
+  "platform": "azure",
+  "build": "pro-code",
+  "scale": { "requestsPerDay": 2500, "inputTokens": 4000, "outputTokens": 450, "stepsPerTask": 3 },
+  "readiness": { "done": ["rd-owner", "rd-value", "rd-data-access"] }
+}

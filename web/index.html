@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Solution Blueprint | azCloudOps</title>
+<meta name="description" content="Free, open-source tool to design an enterprise AI solution from idea to production: pattern, cloud architecture, governance, evaluation, cost and readiness. Runs entirely in your browser.">
+<meta property="og:title" content="AI Solution Blueprint by azCloudOps">
+<meta property="og:description" content="Design an enterprise AI solution from idea to production in one guided session. Free, open source, private by design.">
+<meta name="theme-color" content="#2F6FD6">
+<style>/*__STYLES__*/</style>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<header class="top">
+  <div class="brand">
+    <span class="kicker">azCloudOps Products</span>
+    <h1>AI Solution Blueprint</h1>
+    <span class="ver" id="ver"></span>
+  </div>
+  <div class="actions">
+    <select class="compact" id="example" aria-label="Load an example">
+      <option value="">Load an example</option>
+      <option value="helpdesk">IT help desk answers (RAG)</option>
+      <option value="access">Access request agent</option>
+      <option value="claims">Claims triage (high risk)</option>
+    </select>
+    <button id="importBtn" type="button">Import JSON</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+    <button id="shareBtn" type="button">Copy share link</button>
+    <button id="resetBtn" type="button">Start over</button>
+  </div>
+</header>
+<nav class="steps" id="steps" aria-label="Design steps"></nav>
+<main class="layout">
+  <section id="stage" aria-live="polite"></section>
+  <aside class="summary" id="summary" aria-label="Live summary"></aside>
+</main>
+<footer class="bottom">
+  AI Solution Blueprint is free and open source (MIT). Everything you enter stays in this browser; nothing is sent to any server.
+  <br><a href="https://azcloudops.org" rel="noopener">azcloudops.org</a> · <a href="https://github.com/azcloudops/ai-solution-blueprint" rel="noopener">GitHub</a> · <a href="https://github.com/azcloudops/ai-solution-blueprint/issues/new/choose" rel="noopener">Suggest a feature or report an issue</a>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const KB = /*__KB__*/;
+const EXAMPLES = /*__EXAMPLES__*/;
+</script>
+<script>
+/*__ENGINE__*/
+</script>
+<script>
+/*__APP__*/
+</script>
+</body>
+</html>

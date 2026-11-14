@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/azcloudops/ai-solution-blueprint/security/advisories/new
+    about: Report privately, not as a public issue
+  - name: azCloudOps community
+    url: https://azcloudops.org
+    about: Articles, discussion and events
