@@ -2,6 +2,20 @@
 
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Native Android and iOS apps (Capacitor 8) for Google Play and the App Store, built and uploaded by GitHub Actions.
+- Installable web app (PWA) with offline support.
+- My blueprints: keep many blueprints on the device; open, duplicate and delete them. Blueprints saved by 1.0.0 are migrated automatically.
+- Native share sheet for Markdown, JSON and SVG exports in the mobile apps; Android back button support.
+- IBM Plex Sans bundled so every channel renders the same brand font with no network requests.
+- Store listing kit: copy, privacy answers, screenshots, feature graphic and a privacy policy page.
+
+### Changed
+- "Start over" is now "New blueprint" and keeps the previous blueprint in My blueprints.
+- Share links created in the apps or from a local file point to the hosted web app.
+
 ## [1.0.0] - 2026-11-17
 
 Knowledge base 2026.11.0, reviewed 2026-11-14.

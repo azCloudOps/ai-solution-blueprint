@@ -18,7 +18,7 @@ The knowledge base version follows the calendar (`YYYY.MM.patch`); the tool foll
 | Version | Date | Theme |
 |---|---|---|
 | 1.0.0 | 2026-11-17 | Launch: eight-step designer, four platforms, governance controls, cost estimate, readiness, CLI |
-| 1.1.0 | 2026-12-01 | Ignite 2026 and re:Invent 2026 service updates; KubeCon NA 2026 inference updates for the portable stack |
+| 1.1.0 | 2026-12-01 | Ignite 2026 and re:Invent 2026 service updates; KubeCon NA 2026 inference updates for the portable stack; first Google Play and App Store builds (store availability follows review) |
 | 1.2.0 | 2027-01-05 | Architecture decision record (ADR) export; FOCUS 1.5 aligned cost export (pending ratification) |
 | 1.3.0 | 2027-02-02 | Infrastructure as code starters: Bicep, Terraform and CDK skeletons generated from the blueprint |
 | 1.4.0 | 2027-03-02 | Low-code path: Copilot Studio, Power Platform and Gemini Enterprise app designs with pro-code extension points |
@@ -39,6 +39,7 @@ The north star is one million people designing AI solutions with the tool. Progr
 | Signal | Source |
 |---|---|
 | Web sessions | GitHub Pages and azcloudops.org traffic analytics (aggregate only) |
+| App installs | Google Play Console and App Store Connect (aggregate store statistics) |
 | CLI installs | GitHub clone and release download counts; npm downloads once published to the registry |
 | Community | GitHub stars, forks, issues, discussions and knowledge base contributions |
 
@@ -49,4 +50,4 @@ The north star is one million people designing AI solutions with the tool. Progr
 | 100,000 users | Within twelve months, with localization and industry packs |
 | 1,000,000 users | Stretch goal: partner channels, training providers and enterprise adoption |
 
-Levers: a live demo in every conference talk; a monthly "what changed in the knowledge base" post; one blueprint walkthrough article per month on azcloudops.org; shareable blueprint links; university and bootcamp partnerships; translations; a VS Code extension (planned after 2.0).
+Levers: a live demo in every conference talk; a monthly "what changed in the knowledge base" post; one blueprint walkthrough article per month on azcloudops.org; shareable blueprint links; university and bootcamp partnerships; translations; Google Play and App Store listings; a VS Code extension (planned after 2.0).

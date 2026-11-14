@@ -1,9 +1,16 @@
 (function () {
   "use strict";
   const E = AIBlueprint;
-  const STORE = "aiblueprint:v1";
+  const STORE = "aiblueprint:v1";            // legacy single-blueprint key (1.0.0)
+  const LIBKEY = "aiblueprint:library:v1";   // saved blueprints
+  const CURKEY = "aiblueprint:current:v1";   // id of the open blueprint
+  const HOSTED_URL = "https://azcloudops.github.io/ai-solution-blueprint/";
   // Preview builds run inside sandboxed viewers that block downloads, print and dialogs.
   const PREVIEW = typeof AIBP_PREVIEW !== "undefined" && AIBP_PREVIEW === true;
+  // Native builds run inside the Capacitor shell for the Google Play and App Store apps.
+  const CAP = window.Capacitor;
+  const NATIVE = !!(CAP && typeof CAP.isNativePlatform === "function" && CAP.isNativePlatform());
+  const plugin = (name) => (NATIVE && CAP.Plugins ? CAP.Plugins[name] : null);
   const $ = (s, r = document) => r.querySelector(s);
   const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
@@ -18,16 +25,42 @@
     { id: "blueprint", title: "Blueprint" }
   ];
 
-  let state = load();
+  let lib = [];
+  let currentId = null;
+  let state = E.defaultAnswers();
   let step = 0;
+  let view = "steps"; // "steps" or "library"
 
-  function load() {
-    const fromHash = readHash();
-    if (fromHash) return E.normalize(fromHash);
-    try { const raw = localStorage.getItem(STORE); if (raw) return E.normalize(JSON.parse(raw)); } catch (e) { /* storage unavailable */ }
-    return E.defaultAnswers();
+  function readJSON(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
+  function persist() {
+    try { localStorage.setItem(LIBKEY, JSON.stringify(lib)); localStorage.setItem(CURKEY, currentId); } catch (e) { /* storage unavailable */ }
   }
-  function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+  function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function save() {
+    const entry = { id: currentId, updatedAt: new Date().toISOString(), answers: state };
+    const i = lib.findIndex((b) => b.id === currentId);
+    if (i >= 0) lib[i] = entry; else lib.unshift(entry);
+    persist();
+  }
+  function startNew(answers) { currentId = newId(); state = E.normalize(answers || {}); save(); }
+  function openBlueprint(id) {
+    const b = lib.find((x) => x.id === id); if (!b) return;
+    currentId = id; state = E.normalize(b.answers); persist();
+  }
+  function init() {
+    lib = readJSON(LIBKEY, []);
+    if (!Array.isArray(lib)) lib = [];
+    if (!lib.length) {
+      const legacy = readJSON(STORE, null); // migrate the 1.0.0 single blueprint
+      if (legacy) { lib.push({ id: newId(), updatedAt: new Date().toISOString(), answers: legacy }); }
+    }
+    const fromHash = readHash();
+    if (fromHash) { startNew(fromHash); return; }
+    let cur = null;
+    try { cur = localStorage.getItem(CURKEY); } catch (e) { /* ignore */ }
+    const found = lib.find((b) => b.id === cur) || lib[0];
+    if (found) openBlueprint(found.id); else startNew();
+  }
 
   function b64u(str) { return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
   function unb64u(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return decodeURIComponent(escape(atob(s))); }
@@ -71,7 +104,26 @@
   }
 
   // ---------- Steps ----------
+  function libraryView() {
+    const items = [...lib].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+    const rows = items.map((b) => {
+      let bp; try { bp = E.buildBlueprint(b.answers, KB); } catch (e) { bp = null; }
+      const name = (b.answers.meta && b.answers.meta.name) || "Untitled AI solution";
+      const when = new Date(b.updatedAt);
+      const date = isNaN(when) ? "" : when.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+      return `<div class="lib-item${b.id === currentId ? " current" : ""}">
+        <div class="lib-main"><b>${h(name)}</b>${b.id === currentId ? ' <span class="tag">open</span>' : ""}
+          <div class="small muted">${bp ? `${h(bp.pattern.name)} · ${h(bp.architecture.providerName)} · <span class="tier t${bp.risk.tier}">${bp.risk.tier}</span> · ${E.money(bp.cost.total)}/mo` : "Could not read this blueprint"}${date ? ` · updated ${h(date)}` : ""}</div></div>
+        <div class="lib-actions"><button type="button" class="primary" data-lib-open="${h(b.id)}">Open</button><button type="button" data-lib-dup="${h(b.id)}">Duplicate</button><button type="button" data-lib-del="${h(b.id)}">Delete</button></div>
+      </div>`;
+    }).join("");
+    return `<h2>My blueprints</h2><p class="lead">Every blueprint is saved on this device only. Nothing is uploaded.</p>
+      <div class="export"><button type="button" class="primary" data-lib-new="1">New blueprint</button><button type="button" data-lib-close="1">Back to the open blueprint</button></div>
+      <div class="lib-list">${rows || '<p class="muted">No saved blueprints yet.</p>'}</div>`;
+  }
+
   function renderStep(bp) {
+    if (view === "library") { $("#stage").innerHTML = `<div class="card">${libraryView()}</div>`; return; }
     const s = STEPS[step].id;
     let body = "";
     if (s === "idea") {
@@ -157,9 +209,9 @@
     return `<h2>${h(a.meta.name || "Untitled AI solution")}: blueprint</h2>
     <p class="lead">Knowledge base ${h(bp.kbVersion)}, reviewed ${h(bp.kbReviewed)}. Engine ${h(bp.engineVersion)}.</p>
     <div class="export">
-      <button type="button" class="primary" data-export="md">Download Markdown</button>
-      <button type="button" data-export="json">Download JSON</button>
-      <button type="button" data-export="svg">Download diagram (SVG)</button>
+      <button type="button" class="primary" data-export="md">${NATIVE ? "Share" : "Download"} Markdown</button>
+      <button type="button" data-export="json">${NATIVE ? "Share" : "Download"} JSON</button>
+      <button type="button" data-export="svg">${NATIVE ? "Share" : "Download"} diagram (SVG)</button>
       <button type="button" data-export="mermaid">Copy Mermaid</button>
       <button type="button" data-export="print">Print or save as PDF</button>
     </div>
@@ -198,12 +250,14 @@
   }
 
   function renderNav() {
-    $("#steps").innerHTML = STEPS.map((s, i) => `<button type="button" data-go="${i}" class="${i === step ? "active" : ""}" ${i === step ? 'aria-current="step"' : ""}><span class="n">${i + 1}</span>${h(s.title)}</button>`).join("");
+    const on = (i) => view === "steps" && i === step;
+    $("#steps").innerHTML = STEPS.map((s, i) => `<button type="button" data-go="${i}" class="${on(i) ? "active" : ""}" ${on(i) ? 'aria-current="step"' : ""}><span class="n">${i + 1}</span>${h(s.title)}</button>`).join("");
   }
 
   function render() {
     const bp = E.buildBlueprint(state, KB);
     renderNav(); renderStep(bp); renderSummary(bp);
+    const lb = $("#libraryBtn"); if (lb) lb.textContent = `My blueprints (${lib.length})`;
   }
   function refreshLive() {
     const bp = E.buildBlueprint(state, KB);
@@ -237,7 +291,27 @@
   });
   document.addEventListener("click", (e) => {
     const go = e.target.closest("[data-go]");
-    if (go) { step = Number(go.dataset.go); render(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    if (go) { view = "steps"; step = Number(go.dataset.go); render(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const t = e.target.closest("[data-lib-open],[data-lib-dup],[data-lib-del],[data-lib-new],[data-lib-close]");
+    if (t) {
+      const d = t.dataset;
+      if (d.libOpen) { openBlueprint(d.libOpen); view = "steps"; step = STEPS.length - 1; toast("Blueprint opened"); }
+      if (d.libDup) {
+        const src = lib.find((b) => b.id === d.libDup);
+        if (src) { const copyA = JSON.parse(JSON.stringify(src.answers)); copyA.meta = copyA.meta || {}; copyA.meta.name = `${copyA.meta.name || "Untitled AI solution"} (copy)`; startNew(copyA); toast("Duplicated"); }
+      }
+      if (d.libDel) {
+        const target = lib.find((b) => b.id === d.libDel);
+        const nm = (target && target.answers.meta && target.answers.meta.name) || "this blueprint";
+        if (!PREVIEW && !window.confirm(`Delete ${nm}? This cannot be undone.`)) return;
+        lib = lib.filter((b) => b.id !== d.libDel);
+        if (d.libDel === currentId) { if (lib.length) openBlueprint(lib[0].id); else startNew(); }
+        persist(); toast("Deleted");
+      }
+      if (d.libNew) { startNew(); view = "steps"; step = 0; }
+      if (d.libClose) view = "steps";
+      render(); window.scrollTo({ top: 0 }); return;
+    }
     const ex = e.target.closest("[data-export]");
     if (ex) doExport(ex.dataset.export);
   });
@@ -254,8 +328,23 @@
     try { await navigator.clipboard.writeText(text); toast(msg); }
     catch (e) { if (PREVIEW) toast("Copy was blocked by the viewer"); else window.prompt("Copy this:", text); }
   }
+  async function nativeShareFile(name, content, title) {
+    const fs = plugin("Filesystem"), share = plugin("Share");
+    try {
+      const res = await fs.writeFile({ path: name, data: content, directory: "CACHE", encoding: "utf8" });
+      await share.share({ title, files: [res.uri], dialogTitle: title });
+    } catch (e) {
+      if (e && /cancel/i.test(String(e.message || e))) return;
+      toast("Could not share the file");
+    }
+  }
   function doExport(kind) {
     const bp = E.buildBlueprint(state, KB);
+    if (NATIVE && plugin("Filesystem") && plugin("Share")) {
+      if (kind === "md") return nativeShareFile(`${slug()}-blueprint.md`, E.toMarkdown(bp), "Share blueprint");
+      if (kind === "json") return nativeShareFile(`${slug()}-blueprint.json`, JSON.stringify(state, null, 2), "Share answers");
+      if (kind === "svg") return nativeShareFile(`${slug()}-architecture.svg`, E.toSVG(bp), "Share diagram");
+    }
     if (PREVIEW) {
       if (kind === "md") return copy(E.toMarkdown(bp), "Markdown copied to the clipboard");
       if (kind === "json") return copy(JSON.stringify(state, null, 2), "JSON copied to the clipboard");
@@ -270,7 +359,7 @@
 
   $("#example").addEventListener("change", (e) => {
     const k = e.target.value; if (!k) return;
-    state = E.normalize(EXAMPLES[k]); save(); step = STEPS.length - 1; render(); e.target.value = ""; toast("Example loaded");
+    startNew(EXAMPLES[k]); view = "steps"; step = STEPS.length - 1; render(); e.target.value = ""; toast("Example loaded as a new blueprint");
   });
   $("#importBtn").addEventListener("click", () => $("#importFile").click());
   $("#importFile").addEventListener("change", (e) => {
@@ -281,21 +370,27 @@
         const data = JSON.parse(r.result);
         const errs = E.validateAnswers(data, KB);
         if (errs.length) { toast("Import failed: " + errs[0]); return; }
-        state = E.normalize(data); save(); step = STEPS.length - 1; render(); toast("Blueprint imported");
+        startNew(data); view = "steps"; step = STEPS.length - 1; render(); toast("Blueprint imported");
       } catch (err) { toast("That file is not valid JSON"); }
     };
     r.readAsText(f); e.target.value = "";
   });
-  $("#shareBtn").addEventListener("click", () => {
-    const url = location.href.split("#")[0] + "#bp=" + b64u(JSON.stringify(state));
+  $("#shareBtn").addEventListener("click", async () => {
+    const base = NATIVE || location.protocol === "file:" ? HOSTED_URL : location.href.split("#")[0];
+    const url = base + "#bp=" + b64u(JSON.stringify(state));
+    const share = plugin("Share");
+    if (share) {
+      try { await share.share({ title: state.meta.name || "AI solution blueprint", text: "Open this AI solution blueprint", url, dialogTitle: "Share blueprint link" }); } catch (e) { /* cancelled */ }
+      return;
+    }
     copy(url, "Share link copied. The answers travel in the link itself.");
   });
   $("#resetBtn").addEventListener("click", () => {
-    if (!PREVIEW && !window.confirm("Clear all answers and start a new blueprint?")) return;
-    state = E.defaultAnswers(); save(); step = 0;
+    startNew(); view = "steps"; step = 0;
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-    render();
+    render(); toast("New blueprint started. The previous one is in My blueprints.");
   });
+  $("#libraryBtn").addEventListener("click", () => { view = "library"; render(); window.scrollTo({ top: 0 }); });
 
   if (PREVIEW) {
     $("#shareBtn").hidden = true;
@@ -308,7 +403,21 @@
     note.innerHTML = "<b>Preview build.</b> Export buttons copy to the clipboard here. The full version at azcloudops.org downloads files, prints to PDF and creates share links.";
     $("nav.steps").after(note);
   }
+  if (NATIVE) {
+    document.documentElement.classList.add("native");
+    $("#shareBtn").textContent = "Share link";
+    const app = plugin("App");
+    if (app) {
+      app.addListener("backButton", () => {
+        if (view === "library") { view = "steps"; render(); }
+        else if (step > 0) { step -= 1; render(); window.scrollTo({ top: 0 }); }
+        else app.exitApp();
+      });
+    }
+  }
   $("#ver").textContent = `Version ${E.ENGINE_VERSION} · knowledge base ${KB.kbVersion}`;
-  if (readHash()) step = STEPS.length - 1;
+  const openedFromLink = !!readHash();
+  init();
+  if (openedFromLink) step = STEPS.length - 1;
   render();
 })();

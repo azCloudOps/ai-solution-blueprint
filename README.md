@@ -15,9 +15,13 @@ AI Solution Blueprint is a free, open-source tool from [azCloudOps](https://azcl
 | 7. Readiness | A stage-gated production readiness checklist and score |
 | 8. Blueprint | Export as Markdown, JSON, SVG diagram, Mermaid or PDF |
 
-Private by design: the tool runs entirely in your browser or terminal. No accounts, no tracking, nothing sent to any server.
+Private by design: the tool runs entirely on your device, in the browser, the mobile app or the terminal. No accounts, no tracking, nothing sent to any server.
 
 ## Use it
+
+### On your phone or tablet
+
+AI Solution Blueprint is coming to Google Play and the App Store (native Android, iPhone and iPad apps built from this repository; see [docs/MOBILE.md](docs/MOBILE.md)). Until then, open the web app on your phone and choose "Add to Home Screen" or "Install app": it installs like an app and works offline.
 
 ### In the browser
 
@@ -64,8 +68,10 @@ console.log(toMarkdown(bp));
 ```
 kb/knowledge-base.json   Patterns, cloud service maps, controls, metrics, readiness gates (versioned monthly)
 src/engine.js            Pure functions shared by the web app and CLI
-web/                     Web app source (template, styles, app)
-scripts/build.mjs        Builds dist/index.html, a single self-contained file
+web/                     Web app source (template, styles, app, service worker, fonts)
+scripts/build.mjs        Builds the web app (PWA), the single-file release and the native app bundle
+mobile/                  Capacitor 8 shell for the Google Play and App Store apps
+assets/                  Icon and splash sources
 bin/aiblueprint.js       Zero-dependency CLI
 examples/                Example answers files
 ```

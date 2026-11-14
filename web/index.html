@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1/*__VIEWPORT__*/">
 <title>AI Solution Blueprint | azCloudOps</title>
 <meta name="description" content="Free, open-source tool to design an enterprise AI solution from idea to production: pattern, cloud architecture, governance, evaluation, cost and readiness. Runs entirely in your browser.">
 <meta property="og:title" content="AI Solution Blueprint by azCloudOps">
 <meta property="og:description" content="Design an enterprise AI solution from idea to production in one guided session. Free, open source, private by design.">
 <meta name="theme-color" content="#2F6FD6">
+<!--__HEAD__-->
 <style>/*__STYLES__*/</style>
 </head>
 <body>
@@ -25,10 +26,11 @@
       <option value="access">Access request agent</option>
       <option value="claims">Claims triage (high risk)</option>
     </select>
+    <button id="libraryBtn" type="button">My blueprints</button>
     <button id="importBtn" type="button">Import JSON</button>
     <input type="file" id="importFile" accept="application/json,.json" hidden>
     <button id="shareBtn" type="button">Copy share link</button>
-    <button id="resetBtn" type="button">Start over</button>
+    <button id="resetBtn" type="button">New blueprint</button>
   </div>
 </header>
 <nav class="steps" id="steps" aria-label="Design steps"></nav>
@@ -37,7 +39,7 @@
   <aside class="summary" id="summary" aria-label="Live summary"></aside>
 </main>
 <footer class="bottom">
-  AI Solution Blueprint is free and open source (MIT). Everything you enter stays in this browser; nothing is sent to any server.
+  AI Solution Blueprint is free and open source (MIT). Everything you enter stays on this device; nothing is sent to any server.
   <br><a href="https://azcloudops.org" rel="noopener">azcloudops.org</a> · <a href="https://github.com/azcloudops/ai-solution-blueprint" rel="noopener">GitHub</a> · <a href="https://github.com/azcloudops/ai-solution-blueprint/issues/new/choose" rel="noopener">Suggest a feature or report an issue</a>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -51,5 +53,6 @@ const EXAMPLES = /*__EXAMPLES__*/;
 <script>
 /*__APP__*/
 </script>
+<!--__BODY_END__-->
 </body>
 </html>

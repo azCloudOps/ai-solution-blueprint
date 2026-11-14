@@ -6,7 +6,7 @@
   "bin": { "aiblueprint": "bin/aiblueprint.js" },
   "main": "src/engine.js",
   "exports": { ".": "./src/engine.js", "./kb": "./kb/knowledge-base.json" },
-  "files": ["bin", "src", "kb", "web", "scripts", "examples", "README.md", "LICENSE", "CHANGELOG.md"],
+  "files": ["bin", "src", "kb", "web", "scripts", "examples", "assets/web-icons", "README.md", "LICENSE", "CHANGELOG.md"],
   "scripts": {
     "test": "node --test test/*.test.js",
     "build": "node scripts/build.mjs",

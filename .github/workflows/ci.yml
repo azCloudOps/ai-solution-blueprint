@@ -24,3 +24,24 @@ jobs:
           node bin/aiblueprint.js example access --out /tmp/a.json
           node bin/aiblueprint.js render /tmp/a.json --out /tmp/out
           test -s /tmp/out/blueprint.md && test -s /tmp/out/architecture.svg
+  android-debug-build:
+    # Proves the Android project still compiles. Unsigned debug build; no secrets needed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - working-directory: mobile
+        run: |
+          npm ci
+          npm run build:web
+          npx cap sync android
+      - working-directory: mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleDebug

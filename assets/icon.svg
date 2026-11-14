@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4A86E8"/>
+      <stop offset="1" stop-color="#2149A8"/>
+    </linearGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#grid)"/>
+  <!-- three stacked layers: data, intelligence, experience -->
+  <g transform="translate(512 540)">
+    <path d="M0 150 L250 40 L0 -70 L-250 40 Z" fill="#FFFFFF" fill-opacity="0.35"/>
+    <path d="M0 60 L250 -50 L0 -160 L-250 -50 Z" fill="#FFFFFF" fill-opacity="0.65"/>
+    <path d="M0 -30 L250 -140 L0 -250 L-250 -140 Z" fill="#FFFFFF"/>
+    <circle cx="0" cy="-140" r="38" fill="#F4B63F"/>
+    <line x1="0" y1="-102" x2="0" y2="150" stroke="#F4B63F" stroke-width="14" stroke-linecap="round" stroke-dasharray="2 34"/>
+  </g>
+  <g transform="translate(0 960)">
+    <rect x="0" width="256" height="64" fill="#4A86E8"/><rect x="256" width="256" height="64" fill="#DB4A3B"/>
+    <rect x="512" width="256" height="64" fill="#F4B63F"/><rect x="768" width="256" height="64" fill="#4CA45A"/>
+  </g>
+</svg>

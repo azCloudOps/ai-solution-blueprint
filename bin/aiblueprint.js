@@ -152,7 +152,7 @@ async function main() {
   if (cmd === "web") {
     const { buildHtml } = await import("../scripts/build.mjs");
     const out = flag("out", "ai-solution-blueprint.html");
-    writeFileSync(out, buildHtml());
+    writeFileSync(out, buildHtml({ target: "standalone" }));
     console.log(`Wrote ${resolve(out)}. Open it in any browser; it works offline.`); return;
   }
   if (cmd === "kb") {

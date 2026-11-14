@@ -24,7 +24,7 @@ jobs:
       - run: npm run build
       - name: Package assets
         run: |
-          cp dist/index.html ai-solution-blueprint.html
+          cp dist/ai-solution-blueprint.html ai-solution-blueprint.html
           npm pack
           awk -v v="${GITHUB_REF_NAME#v}" '$0 ~ "^## \\[" v "\\]" {f=1; next} /^## \[/ {f=0} f' CHANGELOG.md > notes.md
           test -s notes.md || echo "See CHANGELOG.md" > notes.md

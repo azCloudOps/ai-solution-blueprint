@@ -14,7 +14,8 @@ Minor releases ship on the first Tuesday of each month. Patch releases ship as n
 5. `npm run check`, then open `dist/index.html` and click through all eight steps on desktop and mobile widths.
 6. Merge to `main`, then tag: `git tag vX.Y.0 && git push origin vX.Y.0`.
 7. The release workflow tests, builds and publishes the GitHub Release with `ai-solution-blueprint.html` attached. The Pages workflow redeploys the hosted app.
-8. Publish the release post on azcloudops.org and LinkedIn, and update the version shown on the Products page.
+8. Mobile: the same tag builds the Android bundle and the iOS archive. Promote the Android release in Play Console and submit the iOS build from TestFlight for review (see docs/MOBILE.md). Paste the CHANGELOG section into "What's New" on both stores.
+9. Publish the release post on azcloudops.org and LinkedIn, and update the version shown on the Products page.
 
 ## Patch releases
 
