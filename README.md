@@ -15,6 +15,8 @@ AI Solution Blueprint is a free, open-source tool from [azCloudOps](https://azcl
 | 7. Readiness | A stage-gated production readiness checklist and score |
 | 8. Blueprint | Export as Markdown, JSON, SVG diagram, Mermaid or PDF |
 
+![AI Solution Blueprint: the actions and risk step with the live summary](docs/images/ai-solution-blueprint-risk-step.png)
+
 Private by design: the tool runs entirely on your device, in the browser, the mobile app or the terminal. No accounts, no tracking, nothing sent to any server.
 
 ## Use it
